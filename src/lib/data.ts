@@ -8,7 +8,7 @@ export const menu = [
   { id: 'fresh_start', name: 'Fresh Start Sip - Real Juice (Small)', price: 30 },
   { id: 'ruby_rush', name: 'Ruby Rush', price: 90 },
   { id: 'berry_blast', name: 'Berry Blast', price: 90 },
-  { id: 'minty_breeze', name: 'Minty Breeze', price: 150 },
+  { id: 'minty_breeze', name: 'Minty Breeze', price: 120 },
   { id: 'blue_wave', name: 'Blue Wave', price: 150 },
   { id: 'peach_freeze', name: 'Peach Freeze', price: 120 },
   { id: 'classic_chill_lassi', name: 'Classic Chill Lassi (200ml)', price: 70 },
