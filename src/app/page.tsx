@@ -8,10 +8,10 @@ export default function Home() {
       <div className="max-w-7xl mx-auto space-y-6">
         <header className="text-center">
           <h1 className="font-headline text-4xl sm:text-5xl font-bold tracking-tight text-primary">
-            StallMaster
+            URBAN SIPS
           </h1>
           <p className="mt-2 text-lg text-foreground/80">
-            Your simple and efficient drink stall order and sales tracker.
+            SIP. CHILL. REPEAT.
           </p>
         </header>
 

@@ -76,7 +76,7 @@ const initialState: FormState = { message: '', success: false };
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'NPR',
   }).format(amount);
 };
 

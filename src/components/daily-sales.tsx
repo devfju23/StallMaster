@@ -7,7 +7,7 @@ import { Timestamp } from 'firebase/firestore';
 
 // Helper to format currency
 export const formatCurrency = (amount: number) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'NPR' }).format(amount);
 
 // Convert Firestore Timestamp or string to Date
 const toDate = (date: Date | Timestamp | string): Date => {
