@@ -1,5 +1,7 @@
-import type { Drink, Order, OrderItem } from './types';
-
+import { addDoc, collection, getDocs, query, where, Timestamp } from "firebase/firestore";
+import { db } from "./firebaseClient";
+import type { Order, OrderItem } from "./types";
+import type { Drink } from './types';
 export const drinks: Drink[] = [
   { id: 'tea', name: 'Iced Tea', price: 2.5 },
   { id: 'coffee', name: 'Cold Brew Coffee', price: 3.5 },
@@ -7,45 +9,46 @@ export const drinks: Drink[] = [
   { id: 'juice', name: 'Orange Juice', price: 3.25 },
   { id: 'smoothie', name: 'Mango Smoothie', price: 4.5 },
 ];
-
-// In-memory "database"
-let orders: Order[] = [];
-let orderIdCounter = 1;
-
-export async function getTodaysOrders(): Promise<{
-  orders: Order[];
-  totalSales: number;
-}> {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const todaysOrders = orders.filter(order => {
-    const orderDate = new Date(order.createdAt);
-    orderDate.setHours(0, 0, 0, 0);
-    return orderDate.getTime() === today.getTime();
-  });
-
-  const totalSales = todaysOrders.reduce((sum, order) => sum + order.total, 0);
-
-  const sortedOrders = todaysOrders.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
-
-  return JSON.parse(JSON.stringify({ orders: sortedOrders, totalSales }));
-}
-
-export async function saveOrder(
-  items: OrderItem[],
-  total: number
-): Promise<Order> {
-  const newOrder: Order = {
-    id: `ORD-${String(orderIdCounter++).padStart(4, '0')}`,
+// Save order to Firestore
+export async function saveOrder(items: OrderItem[], total: number): Promise<Order> {
+  const newOrder = {
     items,
     total,
-    createdAt: new Date(),
+    createdAt: Timestamp.now(),
   };
-  orders.push(newOrder);
 
-  // Return a copy
-  return JSON.parse(JSON.stringify(newOrder));
+  const docRef = await addDoc(collection(db, "orders"), newOrder);
+
+ return {
+    id: docRef.id,
+    items,
+    total,
+    createdAt: newOrder.createdAt.toDate(), // <-- convert here
+  };
+}
+
+// Get today's orders from Firestore
+export async function getTodaysOrders(): Promise<{ orders: Order[]; totalSales: number }> {
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const q = query(
+    collection(db, "orders"),
+    where("createdAt", ">=", startOfDay),
+    where("createdAt", "<=", endOfDay)
+  );
+
+  const snapshot = await getDocs(q);
+
+  const orders = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Order[];
+
+  const totalSales = orders.reduce((sum, order) => sum + (order.total || 0), 0);
+
+  return { orders, totalSales };
 }
