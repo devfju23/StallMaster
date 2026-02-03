@@ -1,4 +1,4 @@
-'use client'; // must be at the top
+//'use client';  must be at the top
 import NewOrderForm from '@/components/new-order-form';
 import DailySales from '@/components/daily-sales';
 

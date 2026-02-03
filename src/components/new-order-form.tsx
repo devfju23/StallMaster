@@ -3,7 +3,7 @@
 import { useState, useReducer, useEffect, useMemo, useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { saveOrderAction, type FormState } from '@/app/actions';
-import { drinks } from '@/lib/data';
+import { menu } from '@/lib/data';
 import type { OrderItem } from '@/lib/types';
 import {
   Card,
@@ -118,7 +118,7 @@ export default function NewOrderForm() {
   );
 
   const handleAddItem = () => {
-    const drink = drinks.find(d => d.id === selectedDrinkId);
+    const drink = menu.find(d => d.id === selectedDrinkId);
     if (drink && quantity > 0) {
       dispatch({
         type: 'ADD_ITEM',
@@ -165,9 +165,9 @@ export default function NewOrderForm() {
                 <SelectValue placeholder="Select a drink..." />
               </SelectTrigger>
               <SelectContent>
-                {drinks.map(drink => (
-                  <SelectItem key={drink.id} value={drink.id}>
-                    {drink.name} ({formatCurrency(drink.price)})
+                {menu.map(menuItem => (
+                  <SelectItem key={menuItem.id} value={menuItem.id}>
+                    {menuItem.name} ({formatCurrency(menuItem.price)})
                   </SelectItem>
                 ))}
               </SelectContent>

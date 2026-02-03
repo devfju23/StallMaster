@@ -1,14 +1,25 @@
+// src/lib/data.ts
 import { addDoc, collection, getDocs, query, where, Timestamp } from "firebase/firestore";
 import { db } from "./firebaseClient";
 import type { Order, OrderItem } from "./types";
-import type { Drink } from './types';
-export const drinks: Drink[] = [
-  { id: 'tea', name: 'Iced Tea', price: 2.5 },
-  { id: 'coffee', name: 'Cold Brew Coffee', price: 3.5 },
-  { id: 'lemonade', name: 'Fresh Lemonade', price: 3.0 },
-  { id: 'juice', name: 'Orange Juice', price: 3.25 },
-  { id: 'smoothie', name: 'Mango Smoothie', price: 4.5 },
+
+// Full menu items
+export const menu = [
+  { id: 'fresh_start', name: 'Fresh Start Sip - Real Juice (Small)', price: 30 },
+  { id: 'ruby_rush', name: 'Ruby Rush', price: 90 },
+  { id: 'berry_blast', name: 'Berry Blast', price: 90 },
+  { id: 'minty_breeze', name: 'Minty Breeze', price: 150 },
+  { id: 'blue_wave', name: 'Blue Wave', price: 150 },
+  { id: 'peach_freeze', name: 'Peach Freeze', price: 120 },
+  { id: 'classic_chill_lassi', name: 'Classic Chill Lassi (200ml)', price: 70 },
+  { id: 'royal_chill_lassi', name: 'Royal Chill Lassi (300ml)', price: 100 },
+  { id: 'classic_coffee', name: 'Classic 3-in-1 Coffee', price: 70 },
+  { id: 'bold_black', name: 'Bold Black Coffee', price: 50 },
+  { id: 'green_tea', name: 'Green Tea', price: 25 },
+  { id: 'ruby_bloom', name: 'Ruby Bloom Tea (Hibiscus Tea)', price: 70 },
+  { id: 'warm_peach', name: 'Warm Peach Hug', price: 100 },
 ];
+
 // Save order to Firestore
 export async function saveOrder(items: OrderItem[], total: number): Promise<Order> {
   const newOrder = {
@@ -19,11 +30,11 @@ export async function saveOrder(items: OrderItem[], total: number): Promise<Orde
 
   const docRef = await addDoc(collection(db, "orders"), newOrder);
 
- return {
+  return {
     id: docRef.id,
     items,
     total,
-    createdAt: newOrder.createdAt.toDate(), // <-- convert here
+    createdAt: newOrder.createdAt.toDate(), // convert Timestamp to Date
   };
 }
 
@@ -43,10 +54,15 @@ export async function getTodaysOrders(): Promise<{ orders: Order[]; totalSales: 
 
   const snapshot = await getDocs(q);
 
-  const orders = snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as Order[];
+  const orders = snapshot.docs.map(doc => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      items: data.items,
+      total: data.total,
+      createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate() : new Date(data.createdAt),
+    } as Order;
+  });
 
   const totalSales = orders.reduce((sum, order) => sum + (order.total || 0), 0);
 
