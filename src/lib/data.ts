@@ -11,13 +11,14 @@ export const menu = [
   { id: 'minty_breeze', name: 'Minty Breeze', price: 120 },
   { id: 'blue_wave', name: 'Blue Wave', price: 150 },
   { id: 'peach_freeze', name: 'Peach Freeze', price: 120 },
-  { id: 'classic_chill_lassi', name: 'Classic Chill Lassi (200ml)', price: 70 },
+  { id: 'classic_chill_lassi', name: 'Classic Chill Lassi (200ml)', price: 80 },
   { id: 'royal_chill_lassi', name: 'Royal Chill Lassi (300ml)', price: 100 },
   { id: 'classic_coffee', name: 'Classic 3-in-1 Coffee', price: 70 },
   { id: 'bold_black', name: 'Bold Black Coffee', price: 50 },
   { id: 'green_tea', name: 'Green Tea', price: 25 },
   { id: 'ruby_bloom', name: 'Ruby Bloom Tea (Hibiscus Tea)', price: 70 },
   { id: 'warm_peach', name: 'Warm Peach Hug', price: 100 },
+  { id: 'lemon_tea', name: 'Lemon Tea', price: 35 },
 ];
 
 // Save order to Firestore
